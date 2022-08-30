@@ -37,6 +37,9 @@ m: initial letters of the modifiers, lower case => include, upper case => exclud
 Modifier lookup:
 a: Attack up\t\td: Durability up\tc: Critical hit\t\tl: Long throw\t\tm: Multishot
 z: Zoom\t\t\t\tq: Quickshot\t\ts: Surf up\t\tg: Guard up
+
+Contribute:
+https://github.com/yeyushen1412/WMC-Cookpot.git
 '''
 
 
