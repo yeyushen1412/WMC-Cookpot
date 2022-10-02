@@ -12,23 +12,29 @@ mods_list = constants.MODIFIERS_SHORT
 
 def find(message):
     if ('m:' not in message) or ('v:' not in message):
-        return 'Invalid filters, command syntax `? find m:amzQ v:120` '
+        return 'Invalid filters, command syntax `? find m:amzQ v:120[+]` '
     try:
-        filter_value, filter_modifiers = get_filters(message)
+        filter_value, filter_modifiers, value_range = get_filters(message)
     except:
-        return 'Invalid filters, command syntax `? find m:amzQ v:120` '
+        return 'Invalid filters, command syntax `? find m:amzQ v:120[+]` '
+
+    filter_values = [filter_value]
+    if value_range == True:
+        filter_values = [filter_value + o for o in range(120-filter_value)]
 
     for filter_modifier in filter_modifiers:
-        r = get_recipe(filter_value, filter_modifier)
+       for filter_value in filter_values:
+            r = get_recipe(filter_value, filter_modifier)
 
-        if r != 'No Match':
-            ingredients = eval(r)
-            matched_out = [ingredient_attr(str(ing), 'NameOut') for ing in ingredients]
-            matched_out = ', '.join(sorted(matched_out))
-            out_str = f'Ingredients: {matched_out}\n'
-            out_str += recipe_out_str(ingredients)
-            print(out_str)
-            return out_str
+            if r != 'No Match':
+                ingredients = eval(r)
+                matched_out = [ingredient_attr(str(ing), 'NameOut') for ing in ingredients]
+                matched_out = ', '.join(sorted(matched_out))
+                out_str = f'Ingredients: {matched_out}\n'
+                out_str += recipe_out_str(ingredients)
+                print(out_str)
+                return out_str
+
     return 'No Match'
 
 
@@ -83,8 +89,12 @@ def get_filters(message):
         xv, yv, xm = x2, y1, y2
     if x1 > y1:
         xv, xm, ym = x2, y2, x1
-
-    filter_value=int(message[xv:yv])
+    value_range = False
+    if '+' in message[xv:yv]:
+        filter_value=int(message[xv:yv].replace('+', ''))
+        value_range = True
+    else:
+        filter_value=int(message[xv:yv])
     filter_modifiers=message[xm:ym].replace(',', '')
 
     to_exclude = [char.upper() for char in filter_modifiers if char.isupper()]
@@ -97,7 +107,7 @@ def get_filters(message):
     for num in range(1 ,len( other_mods)+1):
         for i in combinations(other_mods, num):
             feasible_mods.append(order_modifiers(base+''.join(list(i))))
-    return filter_value, feasible_mods
+    return filter_value, feasible_mods, value_range
 
 def order_modifiers(mod_str):
     filter_modifiers_ordered = ''

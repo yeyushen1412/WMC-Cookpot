@@ -28,11 +28,14 @@ Fuzzy matching:
 
 Find command:
 ? find m: [mod1, mod2, mod3...] v: cure_value
+m: initial letters of the modifiers, lower case => include, upper case => exclude
 
 Examples:
 ? find m: amQ v: 120
 => to find a recipe with a [attack up], m[multishot] and without Q[quickshot] and cure HP value of 120
-m: initial letters of the modifiers, lower case => include, upper case => exclude
+
+? find m: aQ v: 60+
+=> to find a recipe with a [attack up] and without Q[quickshot] and cure HP value >= 60
 
 Modifier lookup:
 a: Attack up\t\td: Durability up\tc: Critical hit\t\tl: Long throw\t\tm: Multishot
