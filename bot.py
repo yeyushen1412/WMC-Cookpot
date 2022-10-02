@@ -30,8 +30,8 @@ Find command:
 ? find m: [mod1, mod2, mod3...] v: cure_value
 
 Examples:
-? find m: amzQ v: 120
-=> to find a recipe with a [attack up], m[motishot] and without Q[quickshot] and cure HP value of 120
+? find m: amQ v: 120
+=> to find a recipe with a [attack up], m[multishot] and without Q[quickshot] and cure HP value of 120
 m: initial letters of the modifiers, lower case => include, upper case => exclude
 
 Modifier lookup:
