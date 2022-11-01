@@ -31,11 +31,14 @@ Find command:
 m: initial letters of the modifiers, lower case => include, upper case => exclude
 
 Examples:
-? find m: amQ v: 120
-=> to find a recipe with a [attack up], m[multishot] and without Q[quickshot] and cure HP value of 120
+? find m: amQ v: 10
+=> to find a recipe with a [attack up], m[multishot] and without Q[quickshot] and cure HP value >= 10
 
-? find m: aQ v: 60+
-=> to find a recipe with a [attack up] and without Q[quickshot] and cure HP value >= 60
+Advanced mode:
+Use "M:a" instead of "m:a" to strictly search for recipes with modifier of "a (attack up)"
+Use "V:10" instead of "v:10" to strictly search for recipes with cure HP value of "10"
+Add "H" in modifier filter, e.g. "? find m:Ha v:105" to search for non-HPE recipes
+Add "h" in modifier filter, e.g. "? find m:ha v:105" to search for only HPE-recipes
 
 Modifier lookup:
 a: Attack up\t\td: Durability up\tc: Critical hit\t\tl: Long throw\t\tm: Multishot
@@ -58,9 +61,9 @@ async def on_message(message):
         return
     if '?' not in message.content:
         return
-    if 'help' in message.content:
+    if '? help' in message.content or '?help' in message.content:
         response = help_message()
-    elif 'find' in message.content:
+    elif '? find' in message.content or '?find' in message.content:
         response = find(message.content)
     else:
         response = cook(message.content)

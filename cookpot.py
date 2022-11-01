@@ -389,7 +389,8 @@ def price_to_mods(price, mode='long'):
 
         if price_str[-pos] == '1':
             mods.append(mod)
-
+    if mode == 'short':
+        return ','.join(mods)
     return ', '.join(mods)
 
 def need_crit(ingredients, value):

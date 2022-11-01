@@ -7,7 +7,7 @@ from itertools import combinations_with_replacement
 
 import constants
 from cookpot import price_to_mods, recipe_attr, ingredient_attr
-
+from recipe_finder import no_hpe
 
 ingredient_list = [i[0] for i in constants.UNIQUE_INGREDIENTS]
 
@@ -29,6 +29,7 @@ def check_known_recipe(choice, known_recipe):
     mods = price_to_mods(price, mode='short')
     ings = str(ingredients)
     unique_key = f'{mods}_{no_crit}_{crit}'
+    hpe = str(no_hpe(ingredients))
 
     if unique_key not in known_recipe.keys():
         known_recipe.update({unique_key: {
@@ -36,7 +37,8 @@ def check_known_recipe(choice, known_recipe):
             'ings': ings,
             'price': price,
             'no_crit': no_crit,
-            'crit': crit}
+            'crit': crit,
+            'hpe': hpe}
         })
     elif is_easier(ingredients, eval(known_recipe[unique_key]['ings'])):
         known_recipe.update({unique_key: {
@@ -44,7 +46,8 @@ def check_known_recipe(choice, known_recipe):
             'ings': ings,
             'price': price,
             'no_crit': no_crit,
-            'crit': crit}
+            'crit': crit,
+            'hpe': hpe}
         })
 
     return known_recipe
