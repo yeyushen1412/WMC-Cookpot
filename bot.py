@@ -1,11 +1,33 @@
+import discord
 import os
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from cookpot import cook
 from recipe_finder import find
 
+
+from keep_alive import keep_alive
+
+keep_alive()
+
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = commands.Bot(command_prefix='?')
+
+from itertools import cycle
+
+status = cycle(['Learning react', 'Coding python'])
+
+
+@client.event
+async def on_ready():
+    change_status.start()
+    print(f'client ready')
+
+
+@tasks.loop(seconds=600)
+async def change_status():
+    await client.change_presence(activity=discord.Game(next(status)))
+
 
 def help_message():
     return '''Cook command:
