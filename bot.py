@@ -87,7 +87,7 @@ async def on_message(message):
         response = help_message()
     elif '? find' in message.content or '?find' in message.content:
         response = find(message.content)
-    else:
+    elif '? cook' in message.content or '?cook' in message.content:
         response = cook(message.content)
     await message.channel.send(response)
 
