@@ -89,6 +89,8 @@ async def on_message(message):
         response = find(message.content)
     elif '? cook' in message.content or '?cook' in message.content:
         response = cook(message.content)
+    else:
+        return
     await message.channel.send(response)
 
 client.run(TOKEN)
