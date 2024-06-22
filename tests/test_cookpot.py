@@ -6,11 +6,11 @@ def test_good():
         'fairy, palm fruit, dragonhornx3': (29, 75, 75),
         'fairy, palm fruit, dragon fangx3': (29, 70, 70),
         'fairy, palm fruit, 3 distinct dragonhorn': (29, 105, 105),
-        'Endura Carrot, Roasted Endura Carrot, Roasted Bird Thigh x2, Roasted Whole Bird': (411, 112, 120),
-        'Hearty Durian, Courser Bee Honey, Roasted Endura Carrot x3': (385, 112, 120),
-        'Courser Bee Honey, Dragon Horn, Hearty Salmon x2, Roasted Bird Thigh': (149, 120, 120),
+        'Endura Carrot, Roasted Endura Carrot, 2x Roasted Bird Thigh, Roasted Whole Bird': (411, 112, 120),
+        'Hearty Durian, Courser Bee Honey, Roasted Endura Carrot 3': (385, 112, 120),
+        'Courser Bee Honey, Dragon Horn, Hearty 2 Salmon, Roasted Bird Thigh': (149, 120, 120),
         'Hearty Truffle, Dragon Horn, Hearty Salmon, Fairy, Frozen Bird Thigh': (135, 120, 120),
-        'Hyrule Herb, Fairy x2, Dragon Fang, Roasted Bird Thigh': (61, 120, 120),
+        'Hyrule Herb, 1x Fairy x2, Dragon Fang, Roasted Bird Thigh': (61, 120, 120),
         'Big Hearty Radish x2, Courser Bee Honey, Dragon Horn, Roasted Bird Thigh': (189, 120, 120),
         'Big Hearty Radish, Courser Bee Honey, Dragon Horn, Hearty Salmon, Roasted Bird Thigh': (169, 120, 120),
         'Hearty Truffle, Silent Princess, 3 distinct Dragon Horn': (57, 81, 81),
@@ -41,7 +41,10 @@ def test_fairy():
         'fairyx2': (2, 68, 80),
         'fairyx3': (2, 108, 120),
         'fairyx4': (2, 120, 120),
-        'fairyx5': (2, 120, 120)
+        'fairyx5': (2, 120, 120),
+        'fairyx6': (2, 120, 120), # test: more than 5 ingredients
+        'fairyx10': (2, 120, 120), # test: more than 5 ingredients
+        'fairyx0': (2, 28, 40) # test: x0 = 0 ignored, 1 used
     }
     for recipe in recipes.keys():
         assert recipe_price_hp(recipe) == recipes.get(recipe)
@@ -76,6 +79,7 @@ def test_fairy_nuts():
         'fairy, acornx2': (2, 34, 46),
         'fairy, acornx3': (2, 36, 48),
         'fairy, acornx4': (2, 38, 50),
+        'fairy, acornx5': (2, 38, 50), # test: more than 5 ingredients
         'fairyx2, acorn': (2, 72, 84)
     }
     for recipe in recipes.keys():

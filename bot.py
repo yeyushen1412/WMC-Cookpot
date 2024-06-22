@@ -9,9 +9,10 @@ from recipe_finder import find
 from keep_alive import keep_alive
 
 keep_alive()
+intents = discord.Intents.all()
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-client = commands.Bot(command_prefix='?')
+client = commands.Bot(command_prefix='?', intents=intents)
 
 from itertools import cycle
 
@@ -36,13 +37,14 @@ Use , to separate ingredients
 
 Some shortcut examples:
 Dragon parts:
-- ? cook farosh horn
-- ? cook 3 distinct dragon horn
-- ? cook ice dragon fang
+- `? cook farosh horn`
+- `? cook claw, scale, horn, 2 fang`
+- `? cook 2 distinct horn` / ? cook 3 unique horn`
+- `? cook ice dragon fang`
 
 Use multiple same ingredients:
-- ? cook apple x3, fairy x2
-- ? cook dragon hornx3, palm fruit, fairy
+- `? cook apple x3, 2x fairy`
+- `? cook 3 palm fruit, fairy 2`
 
 Fuzzy matching:
 - farry, faiiy => fairy
@@ -53,7 +55,7 @@ Find command:
 m: initial letters of the modifiers, lower case => include, upper case => exclude
 
 Examples:
-? find m: amQ v: 10
+`? find m: amQ v: 10`
 => to find a recipe with a [attack up], m[multishot] and without Q[quickshot] and cure HP value >= 10
 
 Advanced mode:

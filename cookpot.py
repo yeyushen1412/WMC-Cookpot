@@ -1,3 +1,4 @@
+import re
 import numpy as np
 import difflib
 
@@ -7,16 +8,20 @@ all_ingredients = constants.ALL_INGREDIENTS
 
 def cook(input_str):
     ingredients = input_str.replace('?', '').replace('cook', '')
-    out_str = f"Ingredients input:{ingredients}\n"
+    out_str = f"> User input:{ingredients}\n"
 
     ingredients = get_ingredient_list(ingredients)
     matching_flag = need_matching(ingredients)
     ingredients = handle_dragon_part(ingredients)
 
     if matching_flag:
-        ingredients, matched_out = fuzzy_matching(ingredients)
-        matched_out = ', '.join(sorted(matched_out))
-        out_str += f'Predicted ingredients: {matched_out}\n'
+        try:
+            ingredients, matched_out = fuzzy_matching(ingredients)
+            matched_out = ', '.join(sorted(matched_out))
+        except:
+            out_str += 'Fuzzy matching failed, please check your command'
+            return out_str
+        out_str += f'Predicted ingredients: **{matched_out}**\n'
 
     out_str += recipe_out_str(ingredients)
     return out_str
@@ -24,12 +29,12 @@ def cook(input_str):
 def recipe_out_str(ingredients):
     price, hp_no_crit, hp_crit = recipe_attr(ingredients)
 
-    out_str = f'''Sell price: {price}\n'''
+    out_str = f'''Sell price: **{price}**\n'''
 
     if hp_no_crit == hp_crit:
-        out_str += f'''HP value: {hp_no_crit}\n'''
+        out_str += f'''HP value: **{hp_no_crit}**\n'''
     else:
-        out_str += f'''HP value: {hp_no_crit} (w/o HP crit), {hp_crit} (w/ HP crit)\n'''
+        out_str += f'''HP value: **{hp_no_crit}** (w/o HP crit), **{hp_crit}** (w/ HP crit)\n'''
     out_str += f'''Modifiers: {price_to_mods(price)}'''
 
     return out_str
@@ -50,20 +55,19 @@ def recipe_price_hp(input_str):
 
 def get_ingredient_list(input_str):
     ingredients = input_str.lower().replace(' ', '').split(',')
-
+    
     for idx, item in enumerate(ingredients):
-        if item[-2:] in ['x1', 'x2', 'x3', 'x4', 'x5']:
-            ingredients[idx] = item[:-2]
+        item = item.strip("'")
+        if 'distinct' not in item and 'unique' not in item:
+            xds = re.findall('(x\d+|\d+x|\d+)', item)
+            if len(xds) > 0:
+                for m in xds: item = item.replace(m, '')
+                count = min(int(''.join(filter(str.isdigit, xds[-1]))) - 1, 5)
+                
+                ingredients[idx] = item
+                ingredients.extend([item] * count)
 
-            iter = eval(item[-1])-1
-            for _ in range(iter):
-                ingredients.append(item[:-2])
-        if item[0] == "'":
-            item = item[1:]
-        if item[-1] == "'":
-            item = item[:-2]
-
-    return ingredients
+    return ingredients[:5]
 
 def handle_dragon_part(ingredients):
     def format_dragon_part(item, d_name):
@@ -107,9 +111,9 @@ def handle_dragon_part(ingredients):
 
         return ingredients
 
-    if '2distinct' in str(ingredients):
+    if '2distinct' in str(ingredients) or '2unique' in str(ingredients):
         ingredients = append_ingredients(ingredients, count=2)
-    if '3distinct' in str(ingredients):
+    if '3distinct' in str(ingredients) or '3unique' in str(ingredients):
         ingredients = append_ingredients(ingredients, count=3)
     else:
         update_ingredients(ingredients)
@@ -391,7 +395,7 @@ def price_to_mods(price, mode='long'):
             mods.append(mod)
     if mode == 'short':
         return ','.join(mods)
-    return ', '.join(mods)
+    return ', '.join([f'**{i[0]}**' + i[1:] for i in mods])
 
 def need_crit(ingredients, value):
     _, hp_no_crit, _ = recipe_attr(ingredients)
